@@ -1,0 +1,93 @@
+
+// const dummyTodos = [
+//     {
+//         id: 1,
+//         category: "Work",
+//         todosArray: [
+//             {
+//                 id: 1,
+//                 task: "complete todo list",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 2,
+//                 task: "setup mac",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 3,
+//                 task: "12 pm meeting",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 4,
+//                 task: "complete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo listcomplete todo list",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 5,
+//                 task: "setup mac",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//         ],
+//     },
+//     {
+//         id: 2,
+//         category: "Household",
+//         todosArray: [
+//             {
+//                 id: 1,
+//                 task: "complete todo list",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 2,
+//                 task: "setup mac",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 3,
+//                 task: "12 pm meeting",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//         ],
+//     },
+//     {
+//         id: 3,
+//         category: "Sports",
+//         todosArray: [
+//             {
+//                 id: 1,
+//                 task: "complete todo list",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 2,
+//                 task: "setup mac",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//             {
+//                 id: 3,
+//                 task: "12 pm meeting",
+//                 isChecked: false,
+//                 isPin: false,
+//             },
+//         ],
+//     },
+// ];
+// const dummyTodoCategories = [
+//     { id: 1, value: "Work" },
+//     { id: 2, value: "Household" },
+//     { id: 3, value: "Sports" },
+//     { id: 4, value: "trial" },
+// ];
