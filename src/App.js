@@ -1,161 +1,109 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./components/Header";
-import CardsForAllCategories from "./components/Cards/CardsForAllCategories";
+import CategoriesContainer from "./components/cards/CategoriesContainer";
 
-import "./App.css";
+import "./app.css";
+import { LOCAL_STORAGE_TODOS_KEY, LOCAL_STORAGE_TODO_CATEGORIES_KEY } from "./constant";
 
-const LOCAL_STORAGE_TODOS_KEY = "LOCAL_STORAGE_TODOS_KEY";
-const dummyTodos = JSON.parse(localStorage.getItem(LOCAL_STORAGE_TODOS_KEY)) || [];
-
-const LOCAL_STORAGE_TODO_CATEGORIES_KEY = "LOCAL_STORAGE_TODO_CATEGORIES_KEY";
-const dummyTodoCategories = JSON.parse(
-    localStorage.getItem(LOCAL_STORAGE_TODO_CATEGORIES_KEY)
-) || [{ id: 1, value: "Work" }];
-
-function saveTodos(todos) {
-    localStorage.setItem(LOCAL_STORAGE_TODOS_KEY, JSON.stringify(todos));
-}
-
-function saveTodoCategories(todoCategories) {
-    localStorage.setItem(
-        LOCAL_STORAGE_TODO_CATEGORIES_KEY,
-        JSON.stringify(todoCategories)
-    );
-}
-
-function capitalizeFirstLetter(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
+import {
+    saveTodoItems,
+    saveTodoCategories,
+    findTodoIndex,
+    addNewCategoryHelper,
+    addNewTodoHelper,
+    handlePinButtonClickHelper,
+} from "./helperFunction";
 
 function App() {
-    const [todos, setTodos] = useState(dummyTodos);
-    const [todoCategories, setTodoCategories] = useState(dummyTodoCategories);
+    const [todoItems, setTodoItems] = useState({});
+    const [todoCategories, setTodoCategories] = useState(["Work"]);
 
-    const findIndexOfCategoryAndTodo = (id, category) => {
-        for (let indexOfCategory = 0; indexOfCategory < todos.length; indexOfCategory++) {
-            if (todos[indexOfCategory].category === category) {
-                for (
-                    let indexOfTodo = 0;
-                    indexOfTodo < todos[indexOfCategory].todosArray.length;
-                    indexOfTodo++
-                ) {
-                    if (todos[indexOfCategory].todosArray[indexOfTodo].id === id) {
-                        return [indexOfCategory, indexOfTodo];
-                    }
-                }
-            }
-        }
-        return [-1, -1];
-    };
+    useEffect(() => {
+        const DUMMY_TODOS =
+            JSON.parse(localStorage.getItem(LOCAL_STORAGE_TODOS_KEY)) || {};
+        const DUMMY_TODO_CATEGORIES = JSON.parse(
+            localStorage.getItem(LOCAL_STORAGE_TODO_CATEGORIES_KEY)
+        ) || ["Work"];
+
+        setTodoItems(DUMMY_TODOS);
+        setTodoCategories(DUMMY_TODO_CATEGORIES);
+    }, []);
 
     const addNewCategory = (newCategory) => {
         if (newCategory.trim() === "") {
             return;
         }
-        newCategory = capitalizeFirstLetter(newCategory);
-        for (let index = 0; index < todoCategories.length; index++) {
-            if (todoCategories[index].value === newCategory) {
-                return;
-            }
-        }
-        const cate = { id: new Date().valueOf(), value: newCategory };
-        const tmpArr = [...todoCategories, cate];
-        saveTodoCategories(tmpArr);
-        setTodoCategories(tmpArr);
+        const clonedTodoCategories = addNewCategoryHelper(newCategory, [
+            ...todoCategories,
+        ]);
+        saveTodoCategories(clonedTodoCategories);
+        setTodoCategories(clonedTodoCategories);
     };
 
-    const addNewTodo = (todo, category) => {
-        if (todo.trim() === "") {
+    const addNewTodo = (todoTask, category) => {
+        if (todoTask.trim() === "") {
             return;
         }
-        const tmpTodos = [...todos];
-        let targetIndex = -1;
-
-        for (let index = 0; index < tmpTodos.length; index++) {
-            if (tmpTodos[index].category === category) {
-                targetIndex = index;
-            }
-        }
-        const newTodo = {
-            id: new Date().valueOf(),
-            task: todo,
-            isChecked: false,
-            isPin: false,
-        };
-
-        if (targetIndex !== -1) {
-            tmpTodos[targetIndex].todosArray.push(newTodo);
-        } else {
-            const uniqueId = new Date().valueOf();
-            const newItem = {
-                id: uniqueId,
-                category: category,
-                todosArray: [],
-            };
-            newItem.todosArray.push(newTodo);
-            tmpTodos.push(newItem);
-        }
-        saveTodos(tmpTodos);
-        setTodos(tmpTodos);
+        const clonedTodoItems = addNewTodoHelper(todoTask, category, { ...todoItems });
+        saveTodoItems(clonedTodoItems);
+        setTodoItems(clonedTodoItems);
     };
 
-    const handleCheckBoxClick = (id, category) => {
-        const tmpTodos = [...todos];
-
-        const [indexOfCategory, indexOfTodo] = findIndexOfCategoryAndTodo(id, category);
-
-        if (indexOfCategory !== -1) {
-            tmpTodos[indexOfCategory].todosArray[indexOfTodo].isChecked =
-                !tmpTodos[indexOfCategory].todosArray[indexOfTodo].isChecked;
-            saveTodos(tmpTodos);
-            setTodos(tmpTodos);
+    const handleCheckBoxClick = (todoId, category) => {
+        const todoIndex = findTodoIndex(todoId, category, todoItems);
+        if (todoIndex === -1) {
+            return;
         }
+        const clonedTodoItems = { ...todoItems };
+
+        clonedTodoItems[category][todoIndex].isChecked =
+            !clonedTodoItems[category][todoIndex].isChecked;
+        saveTodoItems(clonedTodoItems);
+        setTodoItems(clonedTodoItems);
     };
 
-    const handleInputSpanEnter = (id, category, content) => {
+    const handleInputSpanEnter = (todoId, category, content) => {
         if (content.trim() === "") {
-            handleDeleteButtonClick(id, category);
+            handleDeleteButtonClick(todoId, category);
             return;
         }
-        const tmpTodos = [...todos];
-        const [indexOfCategory, indexOfTodo] = findIndexOfCategoryAndTodo(id, category);
-
-        if (indexOfCategory !== -1) {
-            tmpTodos[indexOfCategory].todosArray[indexOfTodo].task = content;
-            saveTodos(tmpTodos);
-            setTodos(tmpTodos);
+        const todoIndex = findTodoIndex(todoId, category, todoItems);
+        if (todoIndex === -1) {
+            return;
         }
+
+        const clonedTodoItems = { ...todoItems };
+
+        clonedTodoItems[category][todoIndex].task = content;
+        saveTodoItems(clonedTodoItems);
+        setTodoItems(clonedTodoItems);
     };
-    const handleDeleteButtonClick = (id, category) => {
-        const tmpTodos = [...todos];
-        const [indexOfCategory, indexOfTodo] = findIndexOfCategoryAndTodo(id, category);
 
-        if (indexOfCategory !== -1) {
-            tmpTodos[indexOfCategory].todosArray.splice(indexOfTodo, 1);
-            if (tmpTodos[indexOfCategory].todosArray.length === 0) {
-                tmpTodos.splice(indexOfCategory, 1);
-            }
-            saveTodos(tmpTodos);
-            setTodos(tmpTodos);
+    const handleDeleteButtonClick = (todoId, category) => {
+        const todoIndex = findTodoIndex(todoId, category, todoItems);
+        if (todoIndex === -1) {
+            return;
         }
+        const clonedTodoItems = { ...todoItems };
+
+        clonedTodoItems[category].splice(todoIndex, 1);
+        if (clonedTodoItems[category].length === 0) {
+            delete clonedTodoItems[category];
+        }
+        saveTodoItems(clonedTodoItems);
+        setTodoItems(clonedTodoItems);
     };
-    const handlePinButtonClick = (id, category) => {
-        const tmpTodos = [...todos];
-        const [indexOfCategory, indexOfTodo] = findIndexOfCategoryAndTodo(id, category);
 
-        if (indexOfCategory !== -1) {
-            const entry = tmpTodos[indexOfCategory].todosArray[indexOfTodo];
-            tmpTodos[indexOfCategory].todosArray.splice(indexOfTodo, 1);
-            entry.isPin = !entry.isPin;
-            entry.id = new Date().valueOf();
-
-            entry.isPin
-                ? tmpTodos[indexOfCategory].todosArray.unshift(entry)
-                : tmpTodos[indexOfCategory].todosArray.push(entry);
-
-            saveTodos(tmpTodos);
-            setTodos(tmpTodos);
+    const handlePinButtonClick = (todoId, category) => {
+        const todoIndex = findTodoIndex(todoId, category, todoItems);
+        if (todoIndex === -1) {
+            return;
         }
+        const clonedTodoItems = handlePinButtonClickHelper(category, todoIndex, {
+            ...todoItems,
+        });
+        saveTodoItems(clonedTodoItems);
+        setTodoItems(clonedTodoItems);
     };
 
     return (
@@ -165,8 +113,8 @@ function App() {
                 addNewCategory={addNewCategory}
                 addNewTodo={addNewTodo}
             />
-            <CardsForAllCategories
-                todos={todos}
+            <CategoriesContainer
+                todoItems={todoItems}
                 handleCheckBoxClick={handleCheckBoxClick}
                 handleInputSpanEnter={handleInputSpanEnter}
                 handleDeleteButtonClick={handleDeleteButtonClick}

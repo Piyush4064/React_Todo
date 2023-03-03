@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
-import CategorySelect from "./CategorySelect";
-import styles from "./AddTodoForm.module.css";
+import CategorySelector from "./CategorySelector";
+import styles from "./addTodoForm.module.css";
 
-const AddTodoForm = (props) => {
+const AddTodoForm = ({ todoCategories, addNewTodo }) => {
     const todoInput = useRef(null);
     const [selectedTodoCategory, setSelectedTodoCategory] = useState("Work");
 
@@ -12,7 +12,7 @@ const AddTodoForm = (props) => {
 
     const handleAddTodo = (event) => {
         event.preventDefault();
-        props.addNewTodo(todoInput.current.value, selectedTodoCategory);
+        addNewTodo(todoInput.current.value, selectedTodoCategory);
         todoInput.current.value = "";
     };
 
@@ -29,9 +29,9 @@ const AddTodoForm = (props) => {
             </button>
             <div className="dropDownMenu">
                 <label>Choose a category:</label>
-                <CategorySelect
+                <CategorySelector
                     value={selectedTodoCategory}
-                    todoCategories={props.todoCategories}
+                    todoCategories={todoCategories}
                     handleCategoryChange={handleCategoryChange}
                 />
             </div>

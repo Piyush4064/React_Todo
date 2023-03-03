@@ -17,12 +17,12 @@ body {
 }
 
 .header input {
-    font-size: 15px;
-    border: 2px solid #d1d3d4;
-    padding: 12px;
+    font-size: 1rem;
+    border: 0.1rem solid #d1d3d4;
+    padding: 0.7rem;
     color: #111111;
     font-weight: 500;
-    border-radius: 5px;
+    border-radius: 0.3rem;
 }
 
 .fa-solid,

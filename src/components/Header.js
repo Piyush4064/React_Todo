@@ -1,16 +1,13 @@
 import React from "react";
-import AddTodoForm from "./Forms/AddTodoForm";
-import AddCategoryForm from "./Forms/AddCategoryForm";
+import AddTodoForm from "./forms/AddTodoForm";
+import AddCategoryForm from "./forms/AddCategoryForm";
 
-const Header = (props) => {
+const Header = ({ todoCategories, addNewTodo, addNewCategory }) => {
     return (
         <div className="header">
             <h1>Todo App</h1>
-            <AddTodoForm
-                todoCategories={props.todoCategories}
-                addNewTodo={props.addNewTodo}
-            />
-            <AddCategoryForm addNewCategory={props.addNewCategory} />
+            <AddTodoForm todoCategories={todoCategories} addNewTodo={addNewTodo} />
+            <AddCategoryForm addNewCategory={addNewCategory} />
         </div>
     );
 };

@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
-import styles from "./AddCategoryForm.module.css";
+import styles from "./addCategoryForm.module.css";
 
-const AddCategoryForm = (props) => {
+const AddCategoryForm = ({ addNewCategory }) => {
     const categoryInput = useRef(null);
 
     const handleAddCategory = (event) => {
         event.preventDefault();
-        props.addNewCategory(categoryInput.current.value);
+        addNewCategory(categoryInput.current.value);
         categoryInput.current.value = "";
     };
 

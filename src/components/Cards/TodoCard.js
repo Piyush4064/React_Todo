@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import ElementMaker from "./ElementMaker";
-import styles from "./CardForTodo.module.css";
+import styles from "./todoCard.module.css";
 
-const CardForTodo = (props) => {
+const TodoCard = (props) => {
     const [todoText, setTodoText] = useState(props.todo);
     const [showInputEle, setShowInputEle] = useState(false);
 
@@ -61,4 +61,4 @@ const CardForTodo = (props) => {
     );
 };
 
-export default CardForTodo;
+export default TodoCard;

@@ -1,17 +1,18 @@
 import React from "react";
-import styles from "./ElementMaker.module.css";
+import styles from "./elementMaker.module.css";
 
 function ElementMaker(props) {
     return (
         <span className={styles.inputSpan}>
             {props.showInputEle && !props.isChecked ? (
-                <input
+                <textarea
                     type="text"
                     value={props.value}
                     onChange={props.handleChange}
                     onBlur={props.handleBlur}
                     onKeyDown={props.handleInputSpanEnter}
                     autoFocus
+                    rows={5}
                 />
             ) : (
                 <span onDoubleClick={props.handleDoubleClick}>{props.value} </span>
