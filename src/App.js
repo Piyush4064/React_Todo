@@ -6,11 +6,11 @@ import "./app.css";
 import { LOCAL_STORAGE_TODOS_KEY, LOCAL_STORAGE_TODO_CATEGORIES_KEY } from "./constant";
 
 import {
-    saveTodoItems,
-    saveTodoCategories,
-    findTodoIndex,
     addNewCategoryHelper,
     addNewTodoHelper,
+    handleCheckBoxClickHelper,
+    handleInputSpanEnterHelper,
+    handleDeleteButtonClickHelper,
     handlePinButtonClickHelper,
 } from "./helperFunction";
 
@@ -30,35 +30,21 @@ function App() {
     }, []);
 
     const addNewCategory = (newCategory) => {
-        if (newCategory.trim() === "") {
-            return;
-        }
         const clonedTodoCategories = addNewCategoryHelper(newCategory, [
             ...todoCategories,
         ]);
-        saveTodoCategories(clonedTodoCategories);
         setTodoCategories(clonedTodoCategories);
     };
 
     const addNewTodo = (todoTask, category) => {
-        if (todoTask.trim() === "") {
-            return;
-        }
         const clonedTodoItems = addNewTodoHelper(todoTask, category, { ...todoItems });
-        saveTodoItems(clonedTodoItems);
         setTodoItems(clonedTodoItems);
     };
 
     const handleCheckBoxClick = (todoId, category) => {
-        const todoIndex = findTodoIndex(todoId, category, todoItems);
-        if (todoIndex === -1) {
-            return;
-        }
-        const clonedTodoItems = { ...todoItems };
-
-        clonedTodoItems[category][todoIndex].isChecked =
-            !clonedTodoItems[category][todoIndex].isChecked;
-        saveTodoItems(clonedTodoItems);
+        const clonedTodoItems = handleCheckBoxClickHelper(todoId, category, {
+            ...todoItems,
+        });
         setTodoItems(clonedTodoItems);
     };
 
@@ -67,42 +53,23 @@ function App() {
             handleDeleteButtonClick(todoId, category);
             return;
         }
-        const todoIndex = findTodoIndex(todoId, category, todoItems);
-        if (todoIndex === -1) {
-            return;
-        }
-
-        const clonedTodoItems = { ...todoItems };
-
-        clonedTodoItems[category][todoIndex].task = content;
-        saveTodoItems(clonedTodoItems);
+        const clonedTodoItems = handleInputSpanEnterHelper(todoId, category, content, {
+            ...todoItems,
+        });
         setTodoItems(clonedTodoItems);
     };
 
     const handleDeleteButtonClick = (todoId, category) => {
-        const todoIndex = findTodoIndex(todoId, category, todoItems);
-        if (todoIndex === -1) {
-            return;
-        }
-        const clonedTodoItems = { ...todoItems };
-
-        clonedTodoItems[category].splice(todoIndex, 1);
-        if (clonedTodoItems[category].length === 0) {
-            delete clonedTodoItems[category];
-        }
-        saveTodoItems(clonedTodoItems);
+        const clonedTodoItems = handleDeleteButtonClickHelper(todoId, category, {
+            ...todoItems,
+        });
         setTodoItems(clonedTodoItems);
     };
 
     const handlePinButtonClick = (todoId, category) => {
-        const todoIndex = findTodoIndex(todoId, category, todoItems);
-        if (todoIndex === -1) {
-            return;
-        }
-        const clonedTodoItems = handlePinButtonClickHelper(category, todoIndex, {
+        const clonedTodoItems = handlePinButtonClickHelper(todoId, category, {
             ...todoItems,
         });
-        saveTodoItems(clonedTodoItems);
         setTodoItems(clonedTodoItems);
     };
 
