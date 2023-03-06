@@ -1,122 +1,165 @@
-import { LOCAL_STORAGE_TODOS_KEY, LOCAL_STORAGE_TODO_CATEGORIES_KEY } from "./constant";
+import { STORE } from "./constant";
+import { produce } from "immer";
 
 export function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function saveTodoItems(todoItems) {
-    localStorage.setItem(LOCAL_STORAGE_TODOS_KEY, JSON.stringify(todoItems));
+function updateTodoItemsInStore(todoItems) {
+    localStorage.setItem(STORE.LOCAL_STORAGE_TODOS_KEY, JSON.stringify(todoItems));
 }
 
-export function saveTodoCategories(todoCategories) {
+export function updateCategoriesinStore(todoCategories) {
     localStorage.setItem(
-        LOCAL_STORAGE_TODO_CATEGORIES_KEY,
+        STORE.LOCAL_STORAGE_TODO_CATEGORIES_KEY,
         JSON.stringify(todoCategories)
     );
 }
 
-const findTodoIndex = (todoId, category, todoItems) => {
-    for (let todoIndex = 0; todoIndex < todoItems[category].length; todoIndex++) {
-        if (todoItems[category][todoIndex].id === todoId) {
-            return todoIndex;
+function findTodoIndex(todoId, category, todoItems) {
+    let index = -1;
+    todoItems[category].forEach((todoItem, idx) => {
+        if (todoItem.id === todoId) {
+            return (index = idx);
         }
-    }
-    return -1;
-};
+    });
+    return index;
+}
 
-export const addNewCategoryHelper = (newCategory, clonedTodoCategories) => {
+export function addNewCategory(newCategory, todoCategories) {
     if (newCategory.trim() === "") {
-        return clonedTodoCategories;
+        return todoCategories;
     }
     newCategory = capitalizeFirstLetter(newCategory);
 
-    const isPresent = clonedTodoCategories.includes(newCategory);
+    const isPresent = todoCategories.includes(newCategory);
     if (isPresent) {
-        return clonedTodoCategories;
+        return todoCategories;
     }
-    clonedTodoCategories.push(newCategory);
-    saveTodoCategories(clonedTodoCategories);
+    const clonedTodoCategories = produce(todoCategories, (draft) => {
+        draft.push(newCategory);
+    });
+    updateCategoriesinStore(clonedTodoCategories);
     return clonedTodoCategories;
-};
+}
 
-export const addNewTodoHelper = (todoTask, category, clonedTodoItems) => {
+export function addNewTodo(todoTask, category, todoItems) {
     if (todoTask.trim() === "") {
-        return clonedTodoItems;
+        return todoItems;
     }
-    const isPresent = clonedTodoItems.hasOwnProperty(category);
-    const newTodo = createTodo(todoTask);
-    if (!isPresent) {
-        clonedTodoItems[category] = [];
-    }
-    clonedTodoItems[category].push(newTodo);
-    saveTodoItems(clonedTodoItems);
+    const isPresent = todoItems.hasOwnProperty(category);
+    const newTodo = new createTodo(todoTask);
+    const clonedTodoItems = produce(todoItems, (draft) => {
+        if (!isPresent) {
+            draft[category] = [];
+        }
+        draft[category].push(newTodo.toJSON());
+    });
+    updateTodoItemsInStore(clonedTodoItems);
     return clonedTodoItems;
-};
+}
 
-export const handleCheckBoxClickHelper = (todoId, category, clonedTodoItems) => {
-    const todoIndex = findTodoIndex(todoId, category, clonedTodoItems);
+export function completeTodo(todoId, category, todoItems) {
+    const todoIndex = findTodoIndex(todoId, category, todoItems);
     if (todoIndex === -1) {
-        return clonedTodoItems;
+        return todoItems;
+    }
+    const clonedTodoItems = produce(todoItems, (draft) => {
+        draft[category][todoIndex].isChecked = !draft[category][todoIndex].isChecked;
+    });
+    updateTodoItemsInStore(clonedTodoItems);
+    return clonedTodoItems;
+}
+
+export function pinTodo(todoId, category, todoItems) {
+    const todoIndex = findTodoIndex(todoId, category, todoItems);
+    if (todoIndex === -1) {
+        return todoItems;
     }
 
-    clonedTodoItems[category][todoIndex].isChecked =
-        !clonedTodoItems[category][todoIndex].isChecked;
-    saveTodoItems(clonedTodoItems);
-    return clonedTodoItems;
-};
+    const clonedTodoItems = produce(todoItems, (draft) => {
+        const entry = draft[category][todoIndex];
+        draft[category].splice(todoIndex, 1);
+        entry.isPin = !entry.isPin;
+        entry.id = new Date().valueOf();
 
-export const handleInputSpanEnterHelper = (
-    todoId,
-    category,
-    content,
-    clonedTodoItems
-) => {
-    const todoIndex = findTodoIndex(todoId, category, clonedTodoItems);
+        entry.isPin ? draft[category].unshift(entry) : draft[category].push(entry);
+    });
+    updateTodoItemsInStore(clonedTodoItems);
+    return clonedTodoItems;
+}
+
+export function saveTodo(todoId, category, content, todoItems) {
+    const todoIndex = findTodoIndex(todoId, category, todoItems);
     if (todoIndex === -1) {
         return;
     }
-
-    clonedTodoItems[category][todoIndex].task = content;
-    saveTodoItems(clonedTodoItems);
+    const clonedTodoItems = produce(todoItems, (draft) => {
+        draft[category][todoIndex].task = content;
+    });
+    updateTodoItemsInStore(clonedTodoItems);
     return clonedTodoItems;
-};
+}
 
-export const handleDeleteButtonClickHelper = (todoId, category, clonedTodoItems) => {
-    const todoIndex = findTodoIndex(todoId, category, clonedTodoItems);
+export function deleteTodo(todoId, category, todoItems) {
+    const todoIndex = findTodoIndex(todoId, category, todoItems);
     if (todoIndex === -1) {
-        return clonedTodoItems;
+        return todoItems;
     }
-
-    clonedTodoItems[category].splice(todoIndex, 1);
-    if (clonedTodoItems[category].length === 0) {
-        delete clonedTodoItems[category];
-    }
-    saveTodoItems(clonedTodoItems);
+    const clonedTodoItems = produce(todoItems, (draft) => {
+        draft[category].splice(todoIndex, 1);
+        if (draft[category].length === 0) {
+            delete draft[category];
+        }
+    });
+    updateTodoItemsInStore(clonedTodoItems);
     return clonedTodoItems;
-};
+}
 
-export const handlePinButtonClickHelper = (todoId, category, clonedTodoItems) => {
-    const todoIndex = findTodoIndex(todoId, category, clonedTodoItems);
-    if (todoIndex === -1) {
-        return clonedTodoItems;
+export class createTodo {
+    #_id;
+    #_task;
+    #_isChecked;
+    #_isPin;
+
+    constructor(task) {
+        this.#_id = new Date().valueOf();
+        this.#_task = task;
+        this.#_isChecked = false;
+        this.#_isPin = false;
     }
-    const entry = clonedTodoItems[category][todoIndex];
-    clonedTodoItems[category].splice(todoIndex, 1);
-    entry.isPin = !entry.isPin;
-    entry.id = new Date().valueOf();
 
-    entry.isPin
-        ? clonedTodoItems[category].unshift(entry)
-        : clonedTodoItems[category].push(entry);
-    saveTodoItems(clonedTodoItems);
-    return clonedTodoItems;
-};
+    get id() {
+        return this.#_id;
+    }
+    get task() {
+        return this.#_task;
+    }
+    get isChecked() {
+        return this.#_isChecked;
+    }
+    get isPin() {
+        return this.#_isPin;
+    }
+    set id(newId) {
+        this.#_id = newId;
+    }
+    set task(value) {
+        this.#_task = value;
+    }
+    set isChecked(isComplete) {
+        this.#_isChecked = isComplete;
+    }
+    set isPin(isPin) {
+        this.#_isPin = isPin;
+    }
 
-export const createTodo = (todo) => {
-    return {
-        id: new Date().valueOf(),
-        task: todo,
-        isChecked: false,
-        isPin: false,
-    };
-};
+    toJSON() {
+        return {
+            id: this.id,
+            task: this.task,
+            isChecked: this.isChecked,
+            isPin: this.isPin,
+        };
+    }
+}

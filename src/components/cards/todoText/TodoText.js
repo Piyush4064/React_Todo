@@ -1,16 +1,16 @@
 import React from "react";
-import styles from "./elementMaker.module.css";
+import styles from "./todoText.module.css";
 
-function ElementMaker(props) {
+function TodoText(props) {
     return (
         <span className={styles.inputSpan}>
             {props.showInputEle && !props.isChecked ? (
                 <textarea
                     type="text"
                     value={props.value}
-                    onChange={props.handleChange}
+                    onChange={props.handleTodoChange}
                     onBlur={props.handleBlur}
-                    onKeyDown={props.handleInputSpanEnter}
+                    onKeyDown={props.handleSaveTodo}
                     autoFocus
                     rows={5}
                 />
@@ -21,4 +21,4 @@ function ElementMaker(props) {
     );
 }
 
-export default ElementMaker;
+export default React.memo(TodoText);

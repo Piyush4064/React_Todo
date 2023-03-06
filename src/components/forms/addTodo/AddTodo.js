@@ -1,20 +1,23 @@
-import React, { useRef, useState } from "react";
-import CategorySelector from "./CategorySelector";
-import styles from "./addTodoForm.module.css";
+import React, { useRef, useState, useCallback } from "react";
+import CategorySelector from "../categorySelector";
+import styles from "./addTodo.module.css";
 
-const AddTodoForm = ({ todoCategories, addNewTodo }) => {
+const AddTodo = ({ todoCategories, addNewTodo }) => {
     const todoInput = useRef(null);
     const [selectedTodoCategory, setSelectedTodoCategory] = useState("Work");
 
-    const handleCategoryChange = (event) => {
+    const handleCategoryChange = useCallback((event) => {
         setSelectedTodoCategory(event.target.value);
-    };
+    }, []);
 
-    const handleAddTodo = (event) => {
-        event.preventDefault();
-        addNewTodo(todoInput.current.value, selectedTodoCategory);
-        todoInput.current.value = "";
-    };
+    const handleAddTodo = useCallback(
+        (event) => {
+            event.preventDefault();
+            addNewTodo(todoInput.current.value, selectedTodoCategory);
+            todoInput.current.value = "";
+        },
+        [addNewTodo, selectedTodoCategory]
+    );
 
     return (
         <form onSubmit={handleAddTodo}>
@@ -39,4 +42,4 @@ const AddTodoForm = ({ todoCategories, addNewTodo }) => {
     );
 };
 
-export default AddTodoForm;
+export default React.memo(AddTodo);

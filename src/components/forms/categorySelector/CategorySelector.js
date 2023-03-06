@@ -8,7 +8,6 @@ const CategorySelector = ({ value, handleCategoryChange, todoCategories }) => {
                 value={value}
                 onChange={handleCategoryChange}
                 id={styles.todoCategories}
-                data-placeholder="Select a Category"
             >
                 {todoCategories.map((todoCategory) => {
                     return (
@@ -22,4 +21,4 @@ const CategorySelector = ({ value, handleCategoryChange, todoCategories }) => {
     );
 };
 
-export default CategorySelector;
+export default React.memo(CategorySelector);

@@ -1,14 +1,17 @@
-import React, { useRef } from "react";
-import styles from "./addCategoryForm.module.css";
+import React, { useRef, useCallback } from "react";
+import styles from "./addCategory.module.css";
 
-const AddCategoryForm = ({ addNewCategory }) => {
+const AddCategory = ({ addNewCategory }) => {
     const categoryInput = useRef(null);
 
-    const handleAddCategory = (event) => {
-        event.preventDefault();
-        addNewCategory(categoryInput.current.value);
-        categoryInput.current.value = "";
-    };
+    const handleAddCategory = useCallback(
+        (event) => {
+            event.preventDefault();
+            addNewCategory(categoryInput.current.value);
+            categoryInput.current.value = "";
+        },
+        [addNewCategory]
+    );
 
     return (
         <form onSubmit={handleAddCategory}>
@@ -26,4 +29,4 @@ const AddCategoryForm = ({ addNewCategory }) => {
     );
 };
 
-export default AddCategoryForm;
+export default React.memo(AddCategory);
