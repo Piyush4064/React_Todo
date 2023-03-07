@@ -4,6 +4,7 @@ import styles from "./container.module.css";
 
 const Container = ({
     todoItems,
+    updateTodoItems,
     handleCompleteTodo,
     handleSaveTodo,
     handleDeleteTodo,
@@ -16,6 +17,8 @@ const Container = ({
                 return (
                     <Category
                         todos={todoItems[key]}
+                        todoItems={todoItems}
+                        updateTodoItems={updateTodoItems}
                         category={key}
                         key={key}
                         handleCompleteTodo={handleCompleteTodo}

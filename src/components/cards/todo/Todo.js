@@ -4,7 +4,7 @@ import styles from "./todo.module.css";
 import { EVENT_KEYS } from "./constant";
 
 const Todo = (props) => {
-    const [todoText, setTodoText] = useState(props.todo);
+    const [todoText, setTodoText] = useState(props.task);
     const [showInputEle, setShowInputEle] = useState(false);
 
     const completeTodo = useCallback(() => {
@@ -39,12 +39,25 @@ const Todo = (props) => {
     const handleBlur = useCallback(() => {
         setShowInputEle(false);
     }, []);
+
+    function handleOnDrag(event) {
+        const transferTodo = {
+            id: props.id,
+            category: props.category,
+            task: props.task,
+            isPin: props.isPin,
+            isChecked: props.isChecked,
+        };
+        event.dataTransfer.setData("transferTodo", JSON.stringify(transferTodo));
+    }
     return (
         <div
             className={`forInsert ${styles.todoCard} ${
                 props.isChecked ? styles.completed : ""
             }`}
             id="todoCategory"
+            draggable
+            onDragStart={handleOnDrag}
         >
             <input
                 type="checkbox"

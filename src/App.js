@@ -28,6 +28,9 @@ function App() {
         setTodoCategories(DUMMY_TODO_CATEGORIES);
     }, []);
 
+    const updateTodoItems = (clonedTodoItems) => {
+        setTodoItems(clonedTodoItems);
+    };
     const handleAddCategory = useCallback(
         (newCategory) => {
             const clonedTodoCategories = addNewCategory(newCategory, todoCategories);
@@ -55,6 +58,7 @@ function App() {
         (todoId, category) => {
             const clonedTodoItems = deleteTodo(todoId, category, todoItems);
             setTodoItems(clonedTodoItems);
+            return clonedTodoItems;
         },
         [todoItems]
     );
@@ -88,6 +92,7 @@ function App() {
             />
             <Container
                 todoItems={todoItems}
+                updateTodoItems={updateTodoItems}
                 handleCompleteTodo={handleCompleteTodo}
                 handleSaveTodo={handleSaveTodo}
                 handleDeleteTodo={handleDeleteTodo}
