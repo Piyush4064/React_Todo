@@ -1,5 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import Category from "./category";
+
 import styles from "./container.module.css";
 
 const Container = ({
@@ -30,6 +33,15 @@ const Container = ({
             })}
         </div>
     );
+};
+
+Container.propTypes = {
+    todoItems: PropTypes.object,
+    updateTodoItems: PropTypes.func,
+    handleCompleteTodo: PropTypes.func,
+    handleSaveTodo: PropTypes.func,
+    handleDeleteTodo: PropTypes.func,
+    handlePinTodo: PropTypes.func,
 };
 
 export default React.memo(Container);

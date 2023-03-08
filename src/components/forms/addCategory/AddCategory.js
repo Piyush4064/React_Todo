@@ -1,4 +1,6 @@
 import React, { useRef, useCallback } from "react";
+import PropTypes from "prop-types";
+
 import styles from "./addCategory.module.css";
 
 const AddCategory = ({ addNewCategory }) => {
@@ -27,6 +29,10 @@ const AddCategory = ({ addNewCategory }) => {
             </button>
         </form>
     );
+};
+
+AddCategory.propTypes = {
+    addNewCategory: PropTypes.func,
 };
 
 export default React.memo(AddCategory);

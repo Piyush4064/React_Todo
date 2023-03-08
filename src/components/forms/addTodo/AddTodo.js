@@ -1,5 +1,8 @@
 import React, { useRef, useState, useCallback } from "react";
+import PropTypes from "prop-types";
+
 import CategorySelector from "../categorySelector";
+
 import styles from "./addTodo.module.css";
 
 const AddTodo = ({ todoCategories, addNewTodo }) => {
@@ -40,6 +43,16 @@ const AddTodo = ({ todoCategories, addNewTodo }) => {
             </div>
         </form>
     );
+};
+
+AddTodo.propTypes = {
+    todoCategories: PropTypes.array,
+    addNewTodo: PropTypes.func,
+    addNewCategory: PropTypes.func,
+    optionalNumber: PropTypes.number,
+    optionalObject: PropTypes.object,
+    optionalString: PropTypes.string,
+    optionalSymbol: PropTypes.symbol,
 };
 
 export default React.memo(AddTodo);

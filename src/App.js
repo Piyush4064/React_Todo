@@ -1,18 +1,12 @@
 import React, { useEffect, useState, useCallback } from "react";
-import Header from "./components/forms";
-import Container from "./components/cards";
 
-import "./app.css";
+import { addNewCategory } from "./helper.category";
+import { addNewTodo, completeTodo, deleteTodo, pinTodo, saveTodo } from "./helper.todo";
+import Container from "./components/cards";
+import Header from "./components/forms";
 import { STORE } from "./constant";
 
-import {
-    addNewCategory,
-    addNewTodo,
-    completeTodo,
-    saveTodo,
-    deleteTodo,
-    pinTodo,
-} from "./helperFunction";
+import "./app.css";
 
 function App() {
     const [todoItems, setTodoItems] = useState({});
@@ -28,9 +22,6 @@ function App() {
         setTodoCategories(DUMMY_TODO_CATEGORIES);
     }, []);
 
-    const updateTodoItems = (clonedTodoItems) => {
-        setTodoItems(clonedTodoItems);
-    };
     const handleAddCategory = useCallback(
         (newCategory) => {
             const clonedTodoCategories = addNewCategory(newCategory, todoCategories);
@@ -46,6 +37,7 @@ function App() {
         },
         [todoItems]
     );
+
     const handleCompleteTodo = useCallback(
         (todoId, category) => {
             const clonedTodoItems = completeTodo(todoId, category, todoItems);
@@ -92,7 +84,7 @@ function App() {
             />
             <Container
                 todoItems={todoItems}
-                updateTodoItems={updateTodoItems}
+                updateTodoItems={setTodoItems}
                 handleCompleteTodo={handleCompleteTodo}
                 handleSaveTodo={handleSaveTodo}
                 handleDeleteTodo={handleDeleteTodo}

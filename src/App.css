@@ -10,28 +10,3 @@ body {
     margin: 0 auto;
     background: white;
 }
-
-.header {
-    width: 40%;
-    margin: 5% auto 0;
-}
-
-.header input {
-    font-size: 1rem;
-    border: 0.1rem solid #d1d3d4;
-    padding: 0.7rem;
-    color: #111111;
-    font-weight: 500;
-    border-radius: 0.3rem;
-}
-
-.fa-solid,
-.fa-trash,
-.fa-solid,
-.fa-thumbtack {
-    pointer-events: none;
-}
-
-.todoCardExpand {
-    max-height: fit-content;
-}

@@ -1,32 +1,45 @@
 import React, { useState, useCallback } from "react";
-import TodoText from "../todoText";
-import styles from "./todo.module.css";
-import { EVENT_KEYS } from "./constant";
+import PropTypes from "prop-types";
 
-const Todo = (props) => {
-    const [todoText, setTodoText] = useState(props.task);
+import { EVENT_KEYS } from "./constant";
+import TodoText from "../todoText";
+
+import styles from "./todo.module.css";
+
+const Todo = ({
+    task,
+    id,
+    category,
+    isPin,
+    isChecked,
+    handleCompleteTodo,
+    handleSaveTodo,
+    handleDeleteTodo,
+    handlePinTodo,
+}) => {
+    const [todoText, setTodoText] = useState(task);
     const [showInputEle, setShowInputEle] = useState(false);
 
     const completeTodo = useCallback(() => {
-        props.handleCompleteTodo(props.id, props.category);
-    }, [props]);
+        handleCompleteTodo(id, category);
+    }, [category, handleCompleteTodo, id]);
 
     const deleteTodo = useCallback(() => {
-        props.handleDeleteTodo(props.id, props.category);
-    }, [props]);
+        handleDeleteTodo(id, category);
+    }, [category, handleDeleteTodo, id]);
 
     const pinTodo = useCallback(() => {
-        props.handlePinTodo(props.id, props.category);
-    }, [props]);
+        handlePinTodo(id, category);
+    }, [category, handlePinTodo, id]);
 
     const saveTodo = useCallback(
         (event) => {
             if (event.key === EVENT_KEYS.ENTER) {
-                props.handleSaveTodo(props.id, props.category, todoText);
+                handleSaveTodo(id, category, todoText);
                 setShowInputEle(false);
             }
         },
-        [props, todoText]
+        [category, handleSaveTodo, id, todoText]
     );
 
     const handleTodoChange = useCallback((event) => {
@@ -36,24 +49,29 @@ const Todo = (props) => {
     const handleDoubleClick = useCallback(() => {
         setShowInputEle(true);
     }, []);
+
     const handleBlur = useCallback(() => {
         setShowInputEle(false);
     }, []);
 
-    function handleOnDrag(event) {
-        const transferTodo = {
-            id: props.id,
-            category: props.category,
-            task: props.task,
-            isPin: props.isPin,
-            isChecked: props.isChecked,
-        };
-        event.dataTransfer.setData("transferTodo", JSON.stringify(transferTodo));
-    }
+    const handleOnDrag = useCallback(
+        (event) => {
+            const transferTodo = {
+                id: id,
+                category: category,
+                task: task,
+                isPin: isPin,
+                isChecked: isChecked,
+            };
+            event.dataTransfer.setData("transferTodo", JSON.stringify(transferTodo));
+        },
+        [category, id, isChecked, isPin, task]
+    );
+
     return (
         <div
             className={`forInsert ${styles.todoCard} ${
-                props.isChecked ? styles.completed : ""
+                isChecked ? styles.completed : ""
             }`}
             id="todoCategory"
             draggable
@@ -63,7 +81,7 @@ const Todo = (props) => {
                 type="checkbox"
                 className={styles.checkBox}
                 onClick={completeTodo}
-                defaultChecked={props.isChecked}
+                defaultChecked={isChecked}
             />
             <TodoText
                 value={todoText}
@@ -72,21 +90,31 @@ const Todo = (props) => {
                 handleBlur={handleBlur}
                 handleSaveTodo={saveTodo}
                 showInputEle={showInputEle}
-                isChecked={props.isChecked}
+                isChecked={isChecked}
             />
             <button className={styles.delete} onClick={deleteTodo}>
                 <i className="fa-solid fa-trash"></i>
             </button>
             <button
-                className={`${styles.pinStyle} ${
-                    props.isPin ? styles.pinButtonToggle : ""
-                }`}
+                className={`${styles.pinStyle} ${isPin ? styles.pinButtonToggle : ""}`}
                 onClick={pinTodo}
             >
                 <i className="fa-solid fa-thumbtack"></i>
             </button>
         </div>
     );
+};
+
+Todo.propTypes = {
+    task: PropTypes.string,
+    id: PropTypes.number,
+    category: PropTypes.string,
+    isPin: PropTypes.bool,
+    isChecked: PropTypes.bool,
+    handleCompleteTodo: PropTypes.func,
+    handleSaveTodo: PropTypes.func,
+    handleDeleteTodo: PropTypes.func,
+    handlePinTodo: PropTypes.func,
 };
 
 export default React.memo(Todo);

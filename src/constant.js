@@ -1,8 +1,6 @@
-const STORE = {
+const STORE = Object.freeze({
     LOCAL_STORAGE_TODOS_KEY: "LOCAL_STORAGE_TODOS_KEY",
     LOCAL_STORAGE_TODO_CATEGORIES_KEY: "LOCAL_STORAGE_TODO_CATEGORIES_KEY",
-};
-
-Object.freeze(STORE);
+});
 
 export { STORE };

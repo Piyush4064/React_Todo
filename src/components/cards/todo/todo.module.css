@@ -41,3 +41,7 @@
     background-color: #000;
     color: #ffffff;
 }
+
+[class^="fa-"] {
+    pointer-events: none;
+}

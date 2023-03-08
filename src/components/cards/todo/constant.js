@@ -1,7 +1,5 @@
-
-
-const EVENT_KEYS = {
+const EVENT_KEYS = Object.freeze({
     ENTER: "Enter",
-};
-Object.freeze(EVENT_KEYS);
+});
+
 export { EVENT_KEYS };

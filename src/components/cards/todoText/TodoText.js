@@ -1,24 +1,44 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import styles from "./todoText.module.css";
 
-function TodoText(props) {
+function TodoText({
+    value,
+    showInputEle,
+    isChecked,
+    handleTodoChange,
+    handleBlur,
+    handleSaveTodo,
+    handleDoubleClick,
+}) {
     return (
         <span className={styles.inputSpan}>
-            {props.showInputEle && !props.isChecked ? (
+            {showInputEle && !isChecked ? (
                 <textarea
                     type="text"
-                    value={props.value}
-                    onChange={props.handleTodoChange}
-                    onBlur={props.handleBlur}
-                    onKeyDown={props.handleSaveTodo}
+                    value={value}
+                    onChange={handleTodoChange}
+                    onBlur={handleBlur}
+                    onKeyDown={handleSaveTodo}
                     autoFocus
                     rows={5}
                 />
             ) : (
-                <span onDoubleClick={props.handleDoubleClick}>{props.value} </span>
+                <span onDoubleClick={handleDoubleClick}>{value} </span>
             )}
         </span>
     );
 }
+
+TodoText.propTypes = {
+    value: PropTypes.string,
+    showInputEle: PropTypes.bool,
+    isChecked: PropTypes.bool,
+    handleTodoChange: PropTypes.func,
+    handleBlur: PropTypes.func,
+    handleSaveTodo: PropTypes.func,
+    handleDoubleClick: PropTypes.func,
+};
 
 export default React.memo(TodoText);

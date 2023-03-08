@@ -1,7 +1,7 @@
 .card {
     text-align: center;
     width: 31%;
-    min-width: 300px;
+    min-width: 20rem;
     height: 20rem;
     border: 0.1rem solid black;
     border-radius: 1.5rem;

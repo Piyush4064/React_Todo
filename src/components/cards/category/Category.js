@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useCallback } from "react";
+import PropTypes from "prop-types";
+
+import { changeTodoCategory } from "./helper.dragAndDropTodo";
 import Todo from "../todo";
+
 import styles from "./category.module.css";
-import { addNewTodo, completeTodo, deleteTodo, pinTodo } from "./helperFunction";
+
 const Category = ({
     todos,
     todoItems,
@@ -12,36 +16,20 @@ const Category = ({
     handleDeleteTodo,
     handlePinTodo,
 }) => {
-    function handleOnDrop(event) {
-        const receivedTodo = JSON.parse(event.dataTransfer.getData("transferTodo"));
-        if (receivedTodo.category === category) {
-            return;
-        }
-        let clonedTodoItems = deleteTodo(
-            receivedTodo.id,
-            receivedTodo.category,
-            todoItems
-        );
-        clonedTodoItems = addNewTodo(receivedTodo.task, category, clonedTodoItems);
-        receivedTodo.isChecked &&
-            (clonedTodoItems = completeTodo(
-                clonedTodoItems[category].at(-1).id,
-                category,
-                clonedTodoItems
-            ));
-        receivedTodo.isPin &&
-            (clonedTodoItems = pinTodo(
-                clonedTodoItems[category].at(-1).id,
-                category,
-                clonedTodoItems
-            ));
+    const handleOnDrop = useCallback(
+        (event) => {
+            const receivedTodo = JSON.parse(event.dataTransfer.getData("transferTodo"));
+            if (receivedTodo.category === category) {
+                return;
+            }
+            changeTodoCategory(receivedTodo, todoItems, category, updateTodoItems);
+        },
+        [category, todoItems, updateTodoItems]
+    );
 
-        updateTodoItems(clonedTodoItems);
-    }
-
-    function handleDragOver(event) {
+    const handleDragOver = useCallback((event) => {
         event.preventDefault();
-    }
+    }, []);
 
     return (
         <div className={styles.card} onDrop={handleOnDrop} onDragOver={handleDragOver}>
@@ -64,6 +52,17 @@ const Category = ({
             })}
         </div>
     );
+};
+
+Category.propTypes = {
+    todos: PropTypes.array,
+    todoItems: PropTypes.object,
+    updateTodoItems: PropTypes.func,
+    category: PropTypes.string,
+    handleCompleteTodo: PropTypes.func,
+    handleSaveTodo: PropTypes.func,
+    handleDeleteTodo: PropTypes.func,
+    handlePinTodo: PropTypes.func,
 };
 
 export default React.memo(Category);
