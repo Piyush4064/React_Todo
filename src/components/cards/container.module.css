@@ -1,0 +1,6 @@
+.cardsForAllCategories {
+    margin-top: 4%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}

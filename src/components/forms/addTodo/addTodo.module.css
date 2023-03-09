@@ -1,0 +1,16 @@
+.inputForTodo {
+    width: 70%;
+    height: 10%;
+    margin-bottom: 2%;
+}
+
+#addTodo {
+    float: right;
+    height: 2rem;
+    border-radius: 0.3rem;
+    font-weight: 500;
+    font-size: 1rem;
+    background-color: #000000;
+    border: none;
+    color: #ffffff;
+}

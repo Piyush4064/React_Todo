@@ -1,0 +1,47 @@
+.todoCard {
+    width: 70%;
+    padding: 0.3rem 0.6rem;
+    display: flex;
+    border-radius: 0.3rem;
+    border: 0.1rem solid rgb(16, 16, 16);
+    cursor: default;
+    margin: 0 auto;
+    margin-top: 2%;
+    justify-content: center;
+    align-items: center;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+.checkBox {
+    margin-right: 2%;
+    flex-grow: 1;
+    accent-color: #000;
+}
+
+.delete {
+    background-color: #000;
+    color: #ffffff;
+}
+
+.pinStyle,
+.delete {
+    height: 2.5em;
+    width: 2.5em;
+    border-radius: 0.3rem;
+    border: none;
+    cursor: pointer;
+    margin-left: 2%;
+    flex-grow: 1;
+}
+
+.pinButtonToggle {
+    background-color: #000;
+    color: #ffffff;
+}
+
+[class^="fa-"] {
+    pointer-events: none;
+}
