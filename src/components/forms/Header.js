@@ -22,4 +22,9 @@ Header.propTypes = {
     addNewCategory: PropTypes.func,
 };
 
+Header.defaultProps = {
+    todoCategories: [],
+    addNewTodo: () => null,
+    addNewCategory: () => null,
+}
 export default React.memo(Header);

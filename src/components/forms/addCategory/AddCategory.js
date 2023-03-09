@@ -35,4 +35,8 @@ AddCategory.propTypes = {
     addNewCategory: PropTypes.func,
 };
 
+AddCategory.defaultProps = {
+    addNewCategory: () => null,
+}
+
 export default React.memo(AddCategory);

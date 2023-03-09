@@ -65,4 +65,15 @@ Category.propTypes = {
     handlePinTodo: PropTypes.func,
 };
 
+Category.defaultProps = {
+    todos: [],
+    todoItems: {},
+    category: "",
+    updateTodoItems: () => null,
+    handleCompleteTodo: () => null,
+    handleSaveTodo: () => null,
+    handleDeleteTodo: () => null,
+    handlePinTodo: () => null,
+};
+
 export default React.memo(Category);

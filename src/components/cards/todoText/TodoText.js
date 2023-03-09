@@ -41,4 +41,14 @@ TodoText.propTypes = {
     handleDoubleClick: PropTypes.func,
 };
 
+TodoText.defaultProps = {
+    value: "",
+    showInputEle: false,
+    isChecked: false,
+    handleTodoChange: () => null,
+    handleBlur: () => null,
+    handleSaveTodo: () => null,
+    handleDoubleClick: () => null,
+};
+
 export default React.memo(TodoText);

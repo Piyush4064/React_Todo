@@ -44,4 +44,13 @@ Container.propTypes = {
     handlePinTodo: PropTypes.func,
 };
 
+Container.defaultProps = {
+    todoItems: {},
+    updateTodoItems: () => null,
+    handleCompleteTodo: () => null,
+    handleSaveTodo: () => null,
+    handleDeleteTodo: () => null,
+    handlePinTodo: () => null,
+};
+
 export default React.memo(Container);

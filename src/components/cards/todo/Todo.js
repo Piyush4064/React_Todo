@@ -117,4 +117,16 @@ Todo.propTypes = {
     handlePinTodo: PropTypes.func,
 };
 
+Todo.defaultProps = {
+    task: "",
+    id: new Date().valueOf(),
+    category: "",
+    isPin: false,
+    isChecked: false,
+    handleCompleteTodo: () => null,
+    handleSaveTodo: () => null,
+    handleDeleteTodo: () => null,
+    handlePinTodo: () => null,
+};
+
 export default React.memo(Todo);

@@ -48,11 +48,11 @@ const AddTodo = ({ todoCategories, addNewTodo }) => {
 AddTodo.propTypes = {
     todoCategories: PropTypes.array,
     addNewTodo: PropTypes.func,
-    addNewCategory: PropTypes.func,
-    optionalNumber: PropTypes.number,
-    optionalObject: PropTypes.object,
-    optionalString: PropTypes.string,
-    optionalSymbol: PropTypes.symbol,
 };
+
+AddTodo.defaultProps = {
+    todoCategories: [],
+    addNewTodo: () => null,
+}
 
 export default React.memo(AddTodo);
